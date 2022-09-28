@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/*.bg-yellow-400{*/
+/*    background: rgb(240, 250, 0);*/
+/*}*/
+
+body{
+    font-family: 'Poppins', sans-serif;
+}
+
+@media (max-width: 1023px){
+    .sm\:min-h-58{
+        min-height: 58px;
+    }
+}
+
+@media(min-width: 1024px){
+    .lg\:text-6xl{
+        font-size: 4.35em !important;
+        line-height: 1.25 !important;
+    }
+}
+
