@@ -27,8 +27,10 @@ Route::post('login', [SessionsController::class, 'store'])->middleware('guest');
 
 Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth');
 
-Route::get('contact',['as' => 'contact, 'uses' => 'ContactController@create']);
-Route::post('contact',['as' => 'contact', 'uses' => 'ContactController@store']);
+Route::middleware(['guest'])->group(function(){
+    Route::get('contact', [ContactController::class, 'create']);
+    Route::post('contact', [ContactController::class, 'store'])->name('contact.store');
+});
 
 // Admin Section
 Route::middleware('can:admin')->group(function () {

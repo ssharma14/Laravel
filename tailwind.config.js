@@ -8,11 +8,15 @@ module.exports = {
     theme: {
         fontSize: {
             '4xl': ['2.25rem', {
-                lineHeight: '1.75'
+                lineHeight: '1.25'
             }],
         },
         backgroundColor: {
             'yellow-400': '#f0fa00',
+            'black': '#000',
+            'neutral-100': '#f0f0f0'
+        },
+        borderColor:{
             'black': '#000',
         },
         extend: {

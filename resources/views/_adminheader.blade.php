@@ -1,11 +1,11 @@
-<header class="relative z-50 w-full flex-none text-sm font-semibold leading-6 text-slate-900 bg-neutral-100">
+<header class="relative z-50 w-full flex-none text-sm font-semibold leading-6 text-slate-900 border-b-2 border-b-black">
     <nav aria-label="Global" class="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
         <div class="relative flex items-center py-[2.125rem]">
-            <a class="mr-auto flex-none text-slate-900" href="/"><img src="{{url('/images/logo.png')}}" alt="logo"></a>
+            <a class="mr-auto flex-none text-slate-900" href="/"><img src="/images/logo.png" alt="logo"></a>
             <div class="hidden lg:flex lg:items-center">
-                <a class="font-semibold border-transparent border-b-2 border-transparent hover:border-black" href="#about">About</a>
-                <a class="font-semibold ml-8 border-transparent border-b-2 border-transparent hover:border-black" href="#work">Work</a>
-                <a class="font-semibold ml-8 border-transparent border-b-2 border-transparent hover:border-black" href="#contact">Contact</a>
+                <a class="font-semibold border-transparent border-b-2 border-transparent hover:border-black" href="/admin/works">All Work Posts</a>
+                <a class="font-semibold ml-8 border-transparent border-b-2 border-transparent hover:border-black" href="/admin/works/create">New Work Post</a>
+                <a class="font-semibold ml-8 border-transparent border-b-2 border-transparent hover:border-black" href="/logout">Logout</a>
             </div>
             <button id="nav-open-button" type="button" class="-my-1 ml-6 -mr-1 flex h-12 w-12 items-center nav-open-button justify-center lg:hidden">
                 <span class="sr-only">Open navigation</span>
@@ -22,9 +22,9 @@
                         <nav class="divide-y divide-slate-900/10 text-base leading-7 text-slate-900">
                             <div class="py-6 px-8">
                                 <div class="-my-2 items-start space-y-2 mt-16">
-                                    <a class="block w-full py-2 font-semibold border-transparent border-b-2 border-transparent hover:border-black" href="#about">About</a>
-                                    <a class="flex w-full items-center py-2 font-semibold border-transparent border-b-2 border-transparent hover:border-black" href="#work">Work</a>
-                                    <a class="block w-full py-2 font-semibold border-transparent border-b-2 border-transparent hover:border-black" href="#contact">Contact</a>
+                                    <a class="font-semibold border-transparent border-b-2 border-transparent hover:border-black" href="/admin/works">All Work Posts</a>
+                                    <a class="font-semibold ml-8 border-transparent border-b-2 border-transparent hover:border-black" href="/admin/works/create">New Work Post</a>
+                                    <a class="font-semibold ml-8 border-transparent border-b-2 border-transparent hover:border-black" href="/logout">Logout</a>
                                 </div>
                             </div>
                         </nav>

@@ -1,5 +1,6 @@
 <x-layout>
-    <x-setting :heading="'Edit Post: ' . $work->title">
+    <div class="px-4 md:px-0 py-8 md:w-2/3 mx-auto">
+        <h1 class="text-lg font-bold mb-8 pb-2 border-b">Edit Post</h1>
         <form method="POST" action="/admin/works/{{ $work->id }}" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
@@ -12,7 +13,7 @@
                     <x-form.input name="img_path" type="file" :value="old('img_path', $work->img_path)" />
                 </div>
 
-                <img src="{{ asset('storage/' . $work->img_path) }}" alt="" class="rounded-xl ml-6" width="100">
+                <img src="{{ asset('storage/' . $work->img_path) }}" alt="" class="ml-6" width="100">
             </div>
 
             <x-form.textarea name="description" required>{{ old('description', $work->description) }}</x-form.textarea>
@@ -22,5 +23,5 @@
 
             <x-form.button>Update</x-form.button>
         </form>
-    </x-setting>
+    </div>
 </x-layout>

@@ -1,5 +1,6 @@
 <x-layout>
-    <x-adminheader heading="Publish New Post">
+    <div class="px-4 py-8 md:w-2/3 md:mx-auto">
+        <h1 class="font-semibold text-4xl">Create Post</h1>
         <form method="POST" action="/admin/works" enctype="multipart/form-data">
             @csrf
 
@@ -13,5 +14,5 @@
 
             <x-form.button>Publish</x-form.button>
         </form>
-    </x-adminheader>
+    </div>
 </x-layout>

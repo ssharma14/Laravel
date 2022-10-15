@@ -2,37 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Contact;
+use App\Http\Requests\ContactRequest;
+
+use App\Mail\ContactMail;
+
+use Illuminate\Http\RedirectResponse;
+
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
     /**
      * Write code on Method
      *
-     * @return response()
+     *
      */
-    public function index()
+    public function create()
     {
-        return view('contactForm');
+        return view('contact');
     }
 
     /**
      * Write code on Method
      *
-     * @return response()
+     *
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'subject' => 'required',
-            'message' => 'required'
-        ]);
+    public function store(ContactRequest $request): RedirectResponse {
 
-        Contact::create($request->all());
+        $validatedData = $request->validated();
 
-        return redirect()->back()
+        Mail::to("sshrishti14@gmail.com")->send(new ContactMail($validatedData));
+
+        return back()
             ->with(['success' => 'Thank you for contact us. we will contact you shortly.']);
+        }
+}
 

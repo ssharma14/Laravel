@@ -3,12 +3,55 @@
 @tailwind utilities;
 
 
-/*.bg-yellow-400{*/
-/*    background: rgb(240, 250, 0);*/
-/*}*/
+.bg-yellow-400{
+    background: rgb(240, 250, 0) !important;
+}
+
+.shadow-black{
+    box-shadow: 0 10px 19px -15px rgba(2,12,27,0.7);
+    border-radius: 4px;
+}
+
+
+.features p span:not(:last-child){
+    margin-right: 1rem;
+}
 
 body{
     font-family: 'Poppins', sans-serif;
+    max-width: 1440px;
+    margin: 0 auto !important;
+    overflow-x: hidden !important;
+}
+
+.work-slider article .links svg{
+    width: 22px;
+    height: 22px;
+}
+
+.work-slider .thumbnail{
+    position: absolute;
+    filter: grayscale(100%) contrast(1) brightness(50%);
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.work-slider .thumbnail img{
+    height: 100%;
+    width: 100%;
+}
+
+.work-slider .content{
+    background: rgba(0,0,0, 0.6);
+}
+
+.work-slider svg{
+    stroke: #ffffff;
+}
+
+.work-slider svg:hover{
+    stroke: rgb(240, 250, 0);
 }
 
 @media (max-width: 1023px){
@@ -17,10 +60,31 @@ body{
     }
 }
 
+@media (min-width: 768px){
+    .form-container input, .form-container textarea{
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #000;
+        border-radius: 0;
+    }
+    .work-slider{
+        width: calc(100% + 1rem);
+        margin-left: -0.5rem;
+    }
+    .work-slider article{
+        width: calc(50% - 1rem) !important;
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+    }
+}
+
 @media(min-width: 1024px){
     .lg\:text-6xl{
         font-size: 4.35em !important;
         line-height: 1.25 !important;
+    }
+    .work-slider article{
+        width: calc(33.333% - 1rem) !important;
     }
 }
 

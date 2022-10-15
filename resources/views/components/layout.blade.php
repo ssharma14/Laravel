@@ -8,10 +8,8 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Roboto:wght@100&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
         <link href="{{url('/css/app.css')}}" rel="stylesheet">
-
+        <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 
         <title>Shrishti Sharma | Web Developer</title>
     </head>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Work;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class AdminPostController extends Controller
 {
