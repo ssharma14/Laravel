@@ -1,6 +1,8 @@
-<footer>
-    <div class="copyright bg-black text-white font-medium md:flex align-middle justify-between px-4 lg:px-8 py-2.5 text-sm">
-        <p class="pb-2 md:pb-0">&copy; <?php echo date("Y"); ?> Shrishti Sharma</p>
-        <p>Built using <a class="underline" href="https://github.com/ssharma14/Laravel.git" target="_blank">Laravel</a> & <a class="underline" href="https://github.com/ssharma14/Laravel.git" target="_blank">Tailwind</a></p>
-    </div>
+<footer class="site-footer">
+    <p class="footer-text">&copy; {{ date("Y") }} Shrishti Sharma</p>
+    <p class="footer-text">
+        Built with <a href="https://laravel.com" target="_blank">Laravel</a>,
+        <a href="https://tailwindcss.com" target="_blank">Tailwind</a> &
+        <a href="https://gsap.com" target="_blank">GSAP</a>
+    </p>
 </footer>

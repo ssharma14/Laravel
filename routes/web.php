@@ -29,7 +29,9 @@ Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth'
 
 Route::middleware(['guest'])->group(function(){
     Route::get('contact', [ContactController::class, 'create']);
-    Route::post('contact', [ContactController::class, 'store'])->name('contact.store');
+    Route::post('contact', [ContactController::class, 'store'])
+        ->name('contact.store')
+        ->middleware('throttle:' . env('CONTACT_RATE_LIMIT', '2') . ',' . env('CONTACT_RATE_DECAY', '10')); // 2 submissions per 10 minutes by default
 });
 
 // Admin Section

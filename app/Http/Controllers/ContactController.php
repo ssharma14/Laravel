@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactRequest;
-
 use App\Mail\ContactMail;
-
-use Illuminate\Http\RedirectResponse;
-
 use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
@@ -19,7 +15,9 @@ class ContactController extends Controller
      */
     public function create()
     {
-        return view('contact');
+        // Generate timestamp token for time-based validation
+        $formToken = encrypt(['timestamp' => now()->timestamp]);
+        return view('contact', compact('formToken'));
     }
 
     /**
@@ -27,14 +25,22 @@ class ContactController extends Controller
      *
      *
      */
-    public function store(ContactRequest $request): RedirectResponse {
-
+    public function store(ContactRequest $request) {
         $validatedData = $request->validated();
 
         Mail::to("sshrishti14@gmail.com")->send(new ContactMail($validatedData));
 
-        return back()
-            ->with(['success' => 'Thank you for contact us. we will contact you shortly.']);
+        // Handle AJAX requests
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you! Your submission has been received!'
+            ]);
         }
+
+        // Handle regular form submissions (fallback)
+        return back()
+            ->with(['success' => 'Thank you! Your submission has been received!']);
+    }
 }
 
