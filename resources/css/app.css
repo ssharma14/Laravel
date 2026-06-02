@@ -557,6 +557,7 @@ body.is-loading .site-header {
     width: 100%;
     height: auto;
     display: block;
+    filter: grayscale(100%);
 }
 
 .about-image::after {
