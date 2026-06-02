@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class ContactRequest extends FormRequest
 {
@@ -40,7 +41,7 @@ class ContactRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param  \Illuminate\Validation\Validator  $validator
+     * @param  Validator  $validator
      * @return void
      */
     public function withValidator($validator)
@@ -52,7 +53,7 @@ class ContactRequest extends FormRequest
                 $timestamp = $tokenData['timestamp'] ?? 0;
                 $elapsed = now()->timestamp - $timestamp;
 
-                $minTime = env('CONTACT_MIN_FILL_TIME', 5);
+                $minTime = config('contact.min_fill_time');
                 if ($elapsed < $minTime) {
                     $validator->errors()->add('form_token', 'Please take your time to fill the form.');
                 }

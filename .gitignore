@@ -10,3 +10,12 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+.idea
+.vscode
+.DS_Store
+auth.json
+*.log
+/public/build
+/composer.phar
+/.phpunit.cache
+/pint.json
