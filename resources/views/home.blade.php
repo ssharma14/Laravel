@@ -23,7 +23,7 @@
                 <div class="about-text">
                     <p>I'm a frontend developer who loves turning complex problems into elegant, user-friendly solutions. I focus on building fast, accessible websites that not only look great but perform exceptionally.</p>
 
-                    <p>Currently at <strong>EBSCO Information Services</strong>, I specialize in integrating modern CSS and JavaScript into Drupal websites, building custom modules, and developing React components with Storybook for consistent UI documentation.</p>
+                    <p>I specialize in integrating modern CSS and JavaScript into Drupal websites, building custom modules, and developing React components with Storybook for consistent UI documentation.</p>
 
                     <p>I've delivered award-winning projects including <a href="https://www.ogilvielaw.com/" target="_blank">Ogilvie</a> (ACE Award for best website under 50K), <a href="https://mcsnet.ca/" target="_blank">MCSnet</a>, <a href="https://kagcanada.ca/" target="_blank">KAG Canada</a>, and <a href="https://alwaysplumbing.ca/" target="_blank">Always Plumbing & Heating</a>.</p>
 

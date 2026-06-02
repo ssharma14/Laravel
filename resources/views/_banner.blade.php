@@ -12,7 +12,7 @@
 
         <!-- Tagline -->
         <div class="hero-tagline">
-            <p>I craft fast, accessible, and visually stunning web experiences. Currently building at EBSCO.</p>
+            <p>I craft fast, accessible, and visually stunning web experiences.</p>
         </div>
 
         <!-- CTA Buttons -->
