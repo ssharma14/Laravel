@@ -21,9 +21,9 @@
                 <h2 class="about-heading">Building digital experiences that make an impact</h2>
 
                 <div class="about-text">
-                    <p>I'm a frontend developer who loves turning complex problems into elegant, user-friendly solutions. I focus on building fast, accessible websites that not only look great but perform exceptionally.</p>
+                    <p>I'm a developer with 7+ years of experience building and maintaining enterprise web applications, CMS platforms, and integrated business systems. I love turning complex problems into elegant, accessible, user-focused solutions.</p>
 
-                    <p>I specialize in integrating modern CSS and JavaScript into Drupal websites, building custom modules, and developing React components with Storybook for consistent UI documentation.</p>
+                    <p>I work across the stack with JavaScript, TypeScript, React, PHP, and ASP.NET C#, building REST APIs and reusable, scalable application architecture. I'm just as comfortable troubleshooting tricky production issues as I am shaping component systems documented in Storybook, collaborating with cross-functional Agile teams along the way.</p>
 
                     <p>I've delivered award-winning projects including <a href="https://www.ogilvielaw.com/" target="_blank">Ogilvie</a> (ACE Award for best website under 50K), <a href="https://mcsnet.ca/" target="_blank">MCSnet</a>, <a href="https://kagcanada.ca/" target="_blank">KAG Canada</a>, and <a href="https://alwaysplumbing.ca/" target="_blank">Always Plumbing & Heating</a>.</p>
 
