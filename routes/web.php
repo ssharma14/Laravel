@@ -1,8 +1,8 @@
 <?php
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ContactController;
+
 use App\Http\Controllers\AdminPostController;
-use \App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SessionsController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,23 +19,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('register', [RegisterController::class, 'create'])->middleware('guest');
-Route::post('register', [RegisterController::class, 'store'])->middleware('guest');
-
 Route::get('login', [SessionsController::class, 'create'])->middleware('guest');
 Route::post('login', [SessionsController::class, 'store'])->middleware('guest');
 
 Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth');
 
-Route::middleware(['guest'])->group(function(){
+Route::middleware(['guest'])->group(function () {
     Route::get('contact', [ContactController::class, 'create']);
     Route::post('contact', [ContactController::class, 'store'])
         ->name('contact.store')
-        ->middleware('throttle:' . env('CONTACT_RATE_LIMIT', '2') . ',' . env('CONTACT_RATE_DECAY', '10')); // 2 submissions per 10 minutes by default
+        ->middleware('throttle:'.config('contact.rate_limit').','.config('contact.rate_decay')); // 2 submissions per 10 minutes by default
 });
 
 // Admin Section
 Route::middleware('can:admin')->group(function () {
     Route::resource('admin/works', AdminPostController::class)->except('show');
 });
-

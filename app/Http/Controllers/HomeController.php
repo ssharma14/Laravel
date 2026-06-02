@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Work;
-use App\Models\Home;
-use Illuminate\Validation\Rule;
 
 class HomeController extends Controller
 {
@@ -15,7 +13,7 @@ class HomeController extends Controller
 
         return view('home')->with([
             'works' => Work::orderBy('sort_order')->get(),
-            'formToken' => $formToken
+            'formToken' => $formToken,
         ]);
     }
 }

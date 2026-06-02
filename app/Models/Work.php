@@ -9,5 +9,16 @@ class Work extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'title',
+        'slug',
+        'description',
+        'features',
+        'img_path',
+        'website_url',
+        'github_url',
+        'sort_order',
+        'published_at',
+    ];
 }
