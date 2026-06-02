@@ -21,7 +21,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-        <link href="{{url('/css/app.css')}}" rel="stylesheet">
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
         <title>Shrishti Sharma | Frontend Developer</title>
     </head>
     <body class="bg-black text-white font-body is-loading">
@@ -53,7 +53,5 @@
                 {{ $slot }}
             </div>
         </div>
-
-        <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>
