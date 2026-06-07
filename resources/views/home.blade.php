@@ -32,60 +32,49 @@
             </div>
         </section>
 
-        <!-- Skills Marquee Section -->
+        <!-- Skills Section -->
         <section class="skills-marquee-section">
-            <div class="marquee-wrapper">
-                <!-- First row -->
-                <div class="marquee">
-                    <div class="marquee-content">
+            <div class="skills-header">
+                <span class="section-label">Skills</span>
+                <h2 class="skills-heading">Tools &amp; technologies I work with</h2>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skills-group">
+                    <h3 class="skills-group-title">Frontend</h3>
+                    <div class="skills-pills">
+                        <span class="skill-item">React <span class="years">2+ yrs</span></span>
+                        <span class="skill-item">TypeScript <span class="years">2+ yrs</span></span>
+                        <span class="skill-item">JavaScript <span class="years">6+ yrs</span></span>
                         <span class="skill-item">HTML <span class="years">6+ yrs</span></span>
                         <span class="skill-item">CSS <span class="years">6+ yrs</span></span>
-                        <span class="skill-item">JavaScript <span class="years">6+ yrs</span></span>
-                        <span class="skill-item">TypeScript <span class="years">2+ yrs</span></span>
-                        <span class="skill-item">React <span class="years">2+ yrs</span></span>
-                        <span class="skill-item">React Native <span class="years">1+ yrs</span></span>
                         <span class="skill-item">SASS <span class="years">4.5+ yrs</span></span>
                         <span class="skill-item">Tailwind <span class="years">2+ yrs</span></span>
-                        <span class="skill-item">jQuery <span class="years">6+ yrs</span></span>
-                        <span class="skill-item">A11y <span class="years">2+ yrs</span></span>
-                        <!-- Duplicate for seamless loop -->
-                        <span class="skill-item">HTML <span class="years">6+ yrs</span></span>
-                        <span class="skill-item">CSS <span class="years">6+ yrs</span></span>
-                        <span class="skill-item">JavaScript <span class="years">6+ yrs</span></span>
-                        <span class="skill-item">TypeScript <span class="years">2+ yrs</span></span>
-                        <span class="skill-item">React <span class="years">2+ yrs</span></span>
                         <span class="skill-item">React Native <span class="years">1+ yrs</span></span>
-                        <span class="skill-item">SASS <span class="years">4.5+ yrs</span></span>
-                        <span class="skill-item">Tailwind <span class="years">2+ yrs</span></span>
                         <span class="skill-item">jQuery <span class="years">6+ yrs</span></span>
-                        <span class="skill-item">A11y <span class="years">2+ yrs</span></span>
                     </div>
                 </div>
 
-                <!-- Second row (reverse direction) -->
-                <div class="marquee reverse">
-                    <div class="marquee-content">
+                <div class="skills-group">
+                    <h3 class="skills-group-title">Backend &amp; Data</h3>
+                    <div class="skills-pills">
                         <span class="skill-item">PHP <span class="years">4.5+ yrs</span></span>
                         <span class="skill-item">Laravel <span class="years">3+ yrs</span></span>
                         <span class="skill-item">WordPress <span class="years">4.5+ yrs</span></span>
                         <span class="skill-item">Drupal <span class="years">3+ yrs</span></span>
                         <span class="skill-item">MySQL <span class="years">4.5+ yrs</span></span>
+                    </div>
+                </div>
+
+                <div class="skills-group">
+                    <h3 class="skills-group-title">Tooling &amp; Practices</h3>
+                    <div class="skills-pills">
                         <span class="skill-item">Git <span class="years">6+ yrs</span></span>
                         <span class="skill-item">Docker <span class="years">2+ yrs</span></span>
                         <span class="skill-item">Storybook <span class="years">2+ yrs</span></span>
                         <span class="skill-item">AWS <span class="years">2+ yrs</span></span>
                         <span class="skill-item">Webpack <span class="years">3+ yrs</span></span>
-                        <!-- Duplicate for seamless loop -->
-                        <span class="skill-item">PHP <span class="years">4.5+ yrs</span></span>
-                        <span class="skill-item">Laravel <span class="years">3+ yrs</span></span>
-                        <span class="skill-item">WordPress <span class="years">4.5+ yrs</span></span>
-                        <span class="skill-item">Drupal <span class="years">3+ yrs</span></span>
-                        <span class="skill-item">MySQL <span class="years">4.5+ yrs</span></span>
-                        <span class="skill-item">Git <span class="years">6+ yrs</span></span>
-                        <span class="skill-item">Docker <span class="years">2+ yrs</span></span>
-                        <span class="skill-item">Storybook <span class="years">2+ yrs</span></span>
-                        <span class="skill-item">AWS <span class="years">2+ yrs</span></span>
-                        <span class="skill-item">Webpack <span class="years">3+ yrs</span></span>
+                        <span class="skill-item">A11y <span class="years">2+ yrs</span></span>
                     </div>
                 </div>
             </div>
@@ -99,26 +88,9 @@
             </div>
 
             @if($works->count())
-                <!-- Mobile swipe hint (clickable) -->
-                <button type="button" class="scroll-hint" aria-label="Go to next project">
-                    <span>Next</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </button>
-
-                <div class="horizontal-scroll-wrapper">
-                    <div class="horizontal-scroll-container">
-                        @foreach ($works as $index => $work)
-                            <x-work-card :work="$work" :index="$index + 1" />
-                        @endforeach
-                    </div>
-                </div>
-
-                <!-- Mobile scroll dots -->
-                <div class="scroll-dots">
+                <div class="work-list">
                     @foreach ($works as $index => $work)
-                        <div class="scroll-dot {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}"></div>
+                        <x-work-card :work="$work" :index="$index + 1" />
                     @endforeach
                 </div>
             @endif

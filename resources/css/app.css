@@ -72,7 +72,9 @@ body {
 }
 
 #smooth-wrapper {
-    overflow: hidden;
+    /* `clip` contains horizontal overflow without creating a scroll container,
+       so descendant `position: sticky` (the section stacking) still works. */
+    overflow: clip;
 }
 
 #smooth-content {
@@ -331,6 +333,31 @@ body.is-loading .site-header {
     color: var(--color-accent);
 }
 
+/* Active state — set by the scrollspy for the section currently in view */
+.nav-link.active {
+    color: var(--color-accent);
+}
+
+.nav-link.active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* ==========================================
+   KEYBOARD FOCUS (WCAG 2.4.7 Focus Visible)
+   The custom cursor hides the pointer, so a clear focus ring is the only
+   affordance keyboard users get — give every interactive element one.
+   ========================================== */
+.nav-link:focus-visible,
+.project-link:focus-visible,
+.social-link:focus-visible,
+.magnetic-btn:focus-visible,
+.contact-email:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+}
+
 /* Mobile menu */
 .mobile-menu {
     position: fixed;
@@ -507,9 +534,15 @@ body.is-loading .site-header {
    ABOUT SECTION
    ========================================== */
 
+/* The stacking base layer — later sections scroll up and cover it. */
 .about-section {
     padding: 8rem 2rem;
     position: relative;
+    z-index: 1;
+    background: var(--color-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 2rem 2rem 0 0;
+    box-shadow: 0 -1.5rem 4rem rgba(0, 0, 0, 0.6);
 }
 
 @media (min-width: 768px) {
@@ -520,7 +553,7 @@ body.is-loading .site-header {
 
 @media (min-width: 1024px) {
     .about-section {
-        padding: 12rem 6rem;
+        padding: 12rem 6rem 6rem;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 6rem;
@@ -645,71 +678,139 @@ body.is-loading .site-header {
 }
 
 /* ==========================================
-   SKILLS MARQUEE
+   SKILLS
    ========================================== */
 
 .skills-marquee-section {
-    padding: 4rem 0;
-    overflow: hidden;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
+    padding: 5rem 0 9rem;
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    background: var(--color-bg);
 }
 
-.marquee-wrapper {
+.skills-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 0 2rem;
+}
+
+.skills-heading {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+}
+
+.skills-grid {
+    counter-reset: skillgroup;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
-.marquee {
-    display: flex;
+.skills-group {
+    position: relative;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    padding: 1.15rem 1.75rem;
     overflow: hidden;
-    user-select: none;
+    transition: border-color 0.4s ease, transform 0.5s var(--ease-out-quart),
+                box-shadow 0.4s ease;
 }
 
-.marquee-content {
+/* Alternating dark shades give the stacked rows some rhythm */
+.skills-group:nth-child(even) {
+    background: var(--color-surface);
+}
+
+@media (min-width: 768px) {
+    .skills-group {
+        padding: 1.35rem 2.25rem;
+    }
+}
+
+/* Accent hairline that sweeps across the top of the card on hover */
+.skills-group::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease-out-quart);
+}
+
+.skills-group:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.5);
+}
+
+.skills-group:hover::before {
+    transform: scaleX(1);
+}
+
+.skills-group-title {
     display: flex;
-    gap: 2rem;
-    animation: marquee 30s linear infinite;
-    flex-shrink: 0;
+    align-items: center;
+    gap: 0.65rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin-bottom: 1rem;
 }
 
-.marquee.reverse .marquee-content {
-    animation-direction: reverse;
+.skills-group-title::before {
+    counter-increment: skillgroup;
+    content: counter(skillgroup, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-bg);
+    background: var(--color-accent);
+    padding: 0.2rem 0.45rem;
+    line-height: 1;
 }
 
-.marquee:hover .marquee-content {
-    animation-play-state: paused;
-}
-
-@keyframes marquee {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
+.skills-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
 }
 
 .skill-item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem 1.5rem;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 100px;
+    padding: 0.55rem 1.1rem;
+    background-color: #1c1c1c;
+    border: 1px solid #2a2a2a;
     font-family: var(--font-body);
     font-size: 0.9375rem;
     white-space: nowrap;
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s var(--ease-out-quart);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Subtle, non-interactive hover — skills are decorative, not clickable */
 .skill-item:hover {
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-bg);
-    transform: scale(1.05);
+    background-color: #232323;
+    border-color: #3a3a3a;
 }
 
 .skill-item .years {
@@ -719,10 +820,6 @@ body.is-loading .site-header {
     transition: color 0.3s ease;
 }
 
-.skill-item:hover .years {
-    color: var(--color-bg);
-}
-
 /* ==========================================
    WORK SECTION - HORIZONTAL SCROLL
    ========================================== */
@@ -730,6 +827,11 @@ body.is-loading .site-header {
 .work-section {
     padding: 8rem 0;
     position: relative;
+    z-index: 3;
+    background: var(--color-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 2rem 2rem 0 0;
+    box-shadow: 0 -1.5rem 4rem rgba(0, 0, 0, 0.6);
 }
 
 .work-header {
@@ -760,114 +862,128 @@ body.is-loading .site-header {
     color: var(--color-accent);
 }
 
-/* Horizontal scroll container */
-.horizontal-scroll-wrapper {
-    position: relative;
-    overflow: hidden;
-}
-
-.horizontal-scroll-container {
+/* Vertical work list — one project per row */
+.work-list {
     display: flex;
-    gap: 2rem;
-    padding: 0 2rem;
-    will-change: transform;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+    padding: 0 1.5rem;
+    width: 100%;
 }
 
 @media (min-width: 768px) {
-    .horizontal-scroll-container {
-        gap: 3rem;
-        padding: 0 4rem;
+    .work-list {
+        gap: 5rem;
+        padding: 0 2rem;
     }
 }
 
-@media (min-width: 1024px) {
-    .horizontal-scroll-container {
-        gap: 4rem;
-        padding: 0 6rem;
-    }
-}
-
-/* Project cards */
+/* Project cards — split layout: image panel + details panel */
 .project-card {
-    flex-shrink: 0;
-    width: 85vw;
-    max-width: 600px;
+    width: 100%;
+    max-width: 560px;
     position: relative;
     cursor: none;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.4s ease, transform 0.6s var(--ease-out-quart);
 }
 
 @media (min-width: 768px) {
     .project-card {
-        width: 60vw;
-        max-width: 700px;
+        flex-direction: row;
+        max-width: 1000px;
+        min-height: 420px;
     }
 }
 
 @media (min-width: 1024px) {
     .project-card {
-        width: 50vw;
-        max-width: 800px;
+        max-width: 1250px;
     }
 }
 
+.project-card:hover {
+    border-color: var(--color-accent);
+}
+
+/* Image panel — fills its column edge-to-edge, kept sharp */
 .project-image {
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
-    aspect-ratio: 16/10;
-    background: linear-gradient(135deg, var(--color-surface) 0%, #1a1a1a 50%, var(--color-surface) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
+    flex-shrink: 0;
+    aspect-ratio: 16 / 10;
+    background: #000000;
+}
+
+@media (min-width: 768px) {
+    .project-image {
+        flex: 0 0 66%;
+        aspect-ratio: auto;
+        min-height: 100%;
+    }
 }
 
 .project-image img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* Show the whole project screenshot, centered — never a zoomed crop. */
     object-fit: contain;
-    border-radius: 4px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.8s var(--ease-out-quart), box-shadow 0.4s ease;
+    object-position: center;
+    padding: 1.25rem;
+    box-sizing: border-box;
 }
 
-.project-card:hover .project-image img {
-    transform: scale(1.03);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
+/* Hairline seam between panels */
 .project-image::after {
     content: '';
     position: absolute;
     inset: 0;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
+    box-shadow: inset -1px 0 0 var(--color-border);
     pointer-events: none;
-    transition: border-color 0.3s ease;
 }
 
-.project-card:hover .project-image::after {
-    border-color: var(--color-accent);
+@media (max-width: 767px) {
+    .project-image::after {
+        box-shadow: inset 0 -1px 0 var(--color-border);
+    }
 }
 
+/* Details panel */
 .project-info {
-    padding: 1.5rem 0;
+    flex: 1;
+    min-width: 0;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+    .project-info {
+        padding: 2.5rem;
+    }
 }
 
 .project-number {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--color-muted);
-    margin-bottom: 0.5rem;
+    color: var(--color-accent);
+    margin-bottom: 0.75rem;
 }
 
 .project-title {
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: clamp(1.5rem, 2vw, 1.875rem);
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    line-height: 1.15;
+    margin-bottom: 1rem;
     transition: color 0.3s ease;
 }
 
@@ -875,33 +991,66 @@ body.is-loading .site-header {
     color: var(--color-accent);
 }
 
-.project-description {
-    color: var(--color-muted);
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
+/* Stretched link: the title is a real link whose ::after covers the whole
+   card, so the card is clickable by mouse and reachable by keyboard. */
+.project-card-link {
+    color: inherit;
+    text-decoration: none;
 }
 
+.project-card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.project-card-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+}
+
+.project-description {
+    color: var(--color-muted);
+    font-size: 0.975rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+/* Push tech tags + links to the bottom of the panel */
 .project-tech {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    margin-top: auto;
 }
 
 .project-tech span {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
-    padding: 0.25rem 0.75rem;
+    padding: 0.3rem 0.8rem;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 100px;
     color: var(--color-muted);
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.project-card:hover .project-tech span {
+    border-color: #2a2a2a;
+    color: #aaaaaa;
 }
 
 .project-links {
     display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+    /* Sit above the stretched card link so these stay individually clickable */
+    position: relative;
+    z-index: 2;
 }
 
 .project-link {
@@ -934,6 +1083,11 @@ body.is-loading .site-header {
     flex-direction: column;
     justify-content: center;
     position: relative;
+    z-index: 4;
+    background: var(--color-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 2rem 2rem 0 0;
+    box-shadow: 0 -1.5rem 4rem rgba(0, 0, 0, 0.6);
 }
 
 @media (min-width: 768px) {
@@ -1208,115 +1362,7 @@ body.is-loading .site-header {
     }
 }
 
-/* ==========================================
-   RESPONSIVE ADJUSTMENTS
-   ========================================== */
-
-@media (max-width: 767px) {
-    .horizontal-scroll-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        position: relative;
-    }
-
-    .horizontal-scroll-wrapper::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Fade gradient on right edge to indicate more content */
-    .horizontal-scroll-wrapper::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 60px;
-        background: linear-gradient(to right, transparent, var(--color-bg));
-        pointer-events: none;
-        z-index: 10;
-        transition: opacity 0.3s ease;
-    }
-
-    .horizontal-scroll-wrapper.scrolled-end::after {
-        opacity: 0;
-    }
-}
-
-/* Mobile scroll hint */
-.scroll-hint {
-    display: none;
-}
-
-@media (max-width: 767px) {
-    .scroll-hint {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem 1.25rem;
-        margin: 0 2rem 1.5rem;
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--color-accent);
-        background-color: transparent;
-        border: 1px solid var(--color-accent);
-        border-radius: 100px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .scroll-hint:hover,
-    .scroll-hint:focus {
-        background-color: var(--color-accent);
-        color: var(--color-bg);
-        outline: none;
-    }
-
-    .scroll-hint:focus-visible {
-        outline: 2px solid var(--color-accent);
-        outline-offset: 2px;
-    }
-
-    .scroll-hint svg {
-        width: 18px;
-        height: 18px;
-        transition: transform 0.3s ease;
-    }
-
-    .scroll-hint:hover svg,
-    .scroll-hint:focus svg {
-        animation: none;
-        transform: translateX(4px);
-    }
-
-    /* Scroll dots indicator */
-    .scroll-dots {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 1.5rem 2rem 0;
-    }
-
-    .scroll-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--color-border);
-        transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .scroll-dot.active {
-        background-color: var(--color-accent);
-        transform: scale(1.2);
-    }
-
-    .scroll-dot:hover {
-        background-color: var(--color-muted);
-    }
-
-    .scroll-dot.active:hover {
-        background-color: var(--color-accent);
-    }
+/* Project card reveal — hidden until the scroll-reveal animation runs */
+.project-card {
+    will-change: transform, opacity;
 }

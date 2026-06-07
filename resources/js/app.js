@@ -431,6 +431,86 @@ class ScrollAnimations {
         this.animateSkillsMarquee();
         this.animateWorkSection();
         this.animateContactSection();
+        this.setupSectionStacking();
+        this.setupScrollSpy();
+    }
+
+    setupScrollSpy() {
+        const links = Array.from(document.querySelectorAll('.nav-link[href^="#"]'));
+        if (!links.length) return;
+
+        const setActive = (id) => {
+            links.forEach((link) => {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+            });
+        };
+
+        // Each nav link maps to the section(s) that should light it up. The
+        // skills section has no link of its own, so it keeps "About" active
+        // while it's on screen.
+        const sections = [
+            { id: 'about', selectors: ['#about', '.skills-marquee-section'] },
+            { id: 'work', selectors: ['#work'] },
+            { id: 'contact', selectors: ['#contact'] },
+        ];
+
+        sections.forEach(({ id, selectors }) => {
+            selectors.forEach((selector) => {
+                const el = document.querySelector(selector);
+                if (!el) return;
+
+                ScrollTrigger.create({
+                    trigger: el,
+                    start: 'top center',
+                    end: 'bottom center',
+                    onToggle: (self) => {
+                        if (self.isActive) setActive(id);
+                    }
+                });
+            });
+        });
+    }
+
+    setupSectionStacking() {
+        // Stacked-section overlay: each section is pinned once you've scrolled
+        // through it, while the next section slides up and covers it. Pinning at
+        // 'bottom bottom' (rather than CSS sticky) means content-heavy sections
+        // stay fully readable first, and tall sections like Work still work.
+        if (window.innerWidth < 1024) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        // Stacking layers, bottom to top: Banner -> (About + Skills) -> Projects -> Contact.
+        // We pin the *last* section of each layer so the next layer slides up and
+        // covers it. About is deliberately NOT pinned, so the skills marquee rides
+        // along with About as one layer over the banner instead of covering About.
+        // Full-height sections pin at 'bottom bottom'. The skills marquee is
+        // shorter than the viewport, so it pins at 'center center' to sit truly
+        // centered on screen before Projects slides up over it.
+        const covered = [
+            { selector: '.hero', start: 'bottom bottom' },
+            { selector: '.skills-marquee-section', start: 'center center', requireFit: true },
+            { selector: '.work-section', start: 'bottom bottom' },
+        ];
+        covered.forEach(({ selector, start, requireFit }) => {
+            const el = document.querySelector(selector);
+            if (!el) return;
+
+            // On short screens a content section can be taller than the viewport.
+            // Pinning it there would let the next section cover its lower rows
+            // before they can be read, so skip the overlap and let it scroll
+            // normally (the full list stays visible before Projects arrives).
+            if (requireFit && el.offsetHeight > window.innerHeight - 40) return;
+
+            ScrollTrigger.create({
+                trigger: el,
+                start,
+                end: '+=' + window.innerHeight,
+                pin: true,
+                pinSpacing: false, // let the next section scroll up and overlap
+                anticipatePin: 1,
+                invalidateOnRefresh: true
+            });
+        });
     }
 
     animateAboutSection() {
@@ -504,19 +584,35 @@ class ScrollAnimations {
     }
 
     animateSkillsMarquee() {
-        const marqueeSection = document.querySelector('.skills-marquee-section');
-        if (!marqueeSection) return;
+        const section = document.querySelector('.skills-marquee-section');
+        if (!section) return;
 
-        gsap.from(marqueeSection, {
-            scrollTrigger: {
-                trigger: marqueeSection,
-                start: 'top 90%',
-                once: true
-            },
-            opacity: 0,
-            duration: 0.8,
-            ease: 'power3.out'
-        });
+        // Respect reduced-motion: leave everything visible, skip the reveal.
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        const header = section.querySelector('.skills-header');
+        const groups = section.querySelectorAll('.skills-group');
+
+        if (header) {
+            gsap.from(header, {
+                scrollTrigger: { trigger: section, start: 'top 80%', once: true },
+                opacity: 0,
+                y: 24,
+                duration: 0.7,
+                ease: 'power3.out'
+            });
+        }
+
+        if (groups.length) {
+            gsap.from(groups, {
+                scrollTrigger: { trigger: section, start: 'top 75%', once: true },
+                opacity: 0,
+                y: 32,
+                duration: 0.7,
+                stagger: 0.12,
+                ease: 'power3.out'
+            });
+        }
     }
 
     animateWorkSection() {
@@ -539,52 +635,28 @@ class ScrollAnimations {
             });
         }
 
-        // Horizontal scroll (desktop only)
-        if (window.innerWidth >= 768) {
-            this.setupHorizontalScroll();
-        }
+        this.setupWorkReveal();
     }
 
-    setupHorizontalScroll() {
-        const wrapper = document.querySelector('.horizontal-scroll-wrapper');
-        const container = document.querySelector('.horizontal-scroll-container');
+    setupWorkReveal() {
+        const cards = gsap.utils.toArray('.project-card');
+        if (!cards.length) return;
 
-        if (!wrapper || !container) return;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        const cards = container.querySelectorAll('.project-card');
-        if (cards.length === 0) return;
-
-        // Calculate scroll distance
-        const totalWidth = container.scrollWidth;
-        const viewportWidth = window.innerWidth;
-        const scrollDistance = totalWidth - viewportWidth + 100;
-
-        gsap.to(container, {
-            x: -scrollDistance,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: wrapper,
-                start: 'top top',
-                end: `+=${scrollDistance}`,
-                scrub: 1,
-                pin: true,
-                anticipatePin: 1,
-                invalidateOnRefresh: true
-            }
-        });
-
-        // Animate cards as they come into view
         cards.forEach((card, index) => {
+            // Each card rises and fades in, alternating its slide direction so the
+            // stacked list reveals with a gentle left/right zig-zag rhythm.
             gsap.from(card, {
                 scrollTrigger: {
-                    trigger: wrapper,
-                    start: 'top center',
+                    trigger: card,
+                    start: 'top 82%',
                     once: true
                 },
                 opacity: 0,
-                y: 50,
-                duration: 0.8,
-                delay: index * 0.15,
+                y: 70,
+                x: reduceMotion ? 0 : (index % 2 === 0 ? -48 : 48),
+                duration: 1,
                 ease: 'power3.out'
             });
         });
@@ -744,97 +816,6 @@ class SmoothScrollLinks {
 }
 
 // ==========================================
-// MOBILE SCROLL HINT
-// ==========================================
-
-class MobileScrollHint {
-    constructor() {
-        this.wrapper = document.querySelector('.horizontal-scroll-wrapper');
-        this.hint = document.querySelector('.scroll-hint');
-        this.dots = document.querySelectorAll('.scroll-dot');
-        this.cards = document.querySelectorAll('.project-card');
-
-        if (this.wrapper && window.innerWidth < 768) {
-            this.init();
-        }
-    }
-
-    init() {
-        this.currentIndex = 0;
-
-        this.wrapper.addEventListener('scroll', () => {
-            const maxScroll = this.wrapper.scrollWidth - this.wrapper.clientWidth;
-            const currentScroll = this.wrapper.scrollLeft;
-
-            // Hide gradient when scrolled to end
-            if (currentScroll >= maxScroll - 10) {
-                this.wrapper.classList.add('scrolled-end');
-            } else {
-                this.wrapper.classList.remove('scrolled-end');
-            }
-
-            // Update active dot based on scroll position
-            this.updateActiveDot(currentScroll);
-        });
-
-        // Click hint to go to next project
-        if (this.hint) {
-            this.hint.addEventListener('click', () => this.scrollToNext());
-        }
-
-        // Click dots to go to specific project
-        this.dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => this.scrollToIndex(index));
-            dot.style.cursor = 'pointer';
-        });
-    }
-
-    scrollToNext() {
-        if (!this.cards.length) return;
-
-        const cardWidth = this.cards[0].offsetWidth;
-        const gap = 32; // 2rem gap
-        const currentScroll = this.wrapper.scrollLeft;
-
-        // Calculate current index
-        this.currentIndex = Math.round(currentScroll / (cardWidth + gap));
-
-        // Go to next, or loop back to first
-        const nextIndex = (this.currentIndex + 1) % this.cards.length;
-        this.scrollToIndex(nextIndex);
-    }
-
-    scrollToIndex(index) {
-        if (!this.cards.length) return;
-
-        const cardWidth = this.cards[0].offsetWidth;
-        const gap = 32;
-        const targetScroll = index * (cardWidth + gap);
-
-        this.wrapper.scrollTo({
-            left: targetScroll,
-            behavior: 'smooth'
-        });
-    }
-
-    updateActiveDot(scrollLeft) {
-        if (!this.dots.length || !this.cards.length) return;
-
-        const cardWidth = this.cards[0].offsetWidth;
-        const gap = 32; // 2rem gap
-        const activeIndex = Math.round(scrollLeft / (cardWidth + gap));
-
-        this.dots.forEach((dot, index) => {
-            if (index === activeIndex) {
-                dot.classList.add('active');
-            } else {
-                dot.classList.remove('active');
-            }
-        });
-    }
-}
-
-// ==========================================
 // INITIALIZE
 // ==========================================
 
@@ -868,7 +849,6 @@ document.addEventListener('DOMContentLoaded', () => {
     new HeaderScroll(lenis);
     new MobileNav();
     new SmoothScrollLinks(lenis);
-    new MobileScrollHint();
 
     // Refresh ScrollTrigger after fonts load
     document.fonts.ready.then(() => {

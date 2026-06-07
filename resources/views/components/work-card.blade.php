@@ -1,5 +1,11 @@
 @props(['work', 'index' => 1])
 
+@php
+    // The whole card is clickable via a stretched link on the title.
+    // Live Site takes preference; fall back to the GitHub repo.
+    $primaryUrl = $work->website_url ?: $work->github_url;
+@endphp
+
 <article class="project-card" data-cursor="view">
     <!-- Project Image -->
     <div class="project-image">
@@ -9,18 +15,26 @@
     <!-- Project Info -->
     <div class="project-info">
         <span class="project-number">0{{ $index }}</span>
-        <h3 class="project-title">{{ $work->title }}</h3>
-        <p class="project-description">{!! Str::limit(strip_tags($work->description), 120) !!}</p>
+        <h3 class="project-title">
+            @if($primaryUrl)
+                <a href="{{ $primaryUrl }}" class="project-card-link" target="_blank" rel="noopener noreferrer">{{ $work->title }}</a>
+            @else
+                {{ $work->title }}
+            @endif
+        </h3>
+        <p class="project-description">{!! Str::limit(strip_tags($work->description), 280) !!}</p>
 
-        @if(!empty($work->features))
+        @php
+            // Features may be stored as comma-separated text or as <span>… </span> chips.
+            // Normalise both into a clean list of tags.
+            $rawFeatures = str_ireplace(['<span>', '</span>'], ',', $work->features ?? '');
+            $features = array_filter(array_map('trim', explode(',', strip_tags($rawFeatures))));
+        @endphp
+
+        @if(!empty($features))
             <div class="project-tech">
-                @foreach(explode('<span>', $work->features) as $feature)
-                    @php
-                        $cleanFeature = trim(strip_tags($feature));
-                    @endphp
-                    @if(!empty($cleanFeature))
-                        <span>{{ $cleanFeature }}</span>
-                    @endif
+                @foreach($features as $feature)
+                    <span>{{ $feature }}</span>
                 @endforeach
             </div>
         @endif
