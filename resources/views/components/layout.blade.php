@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!-- Google Analytics -->
+        {{-- Google Analytics — production only, so local dev is never tracked --}}
+        @production
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-53KD6RL4FE"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -9,6 +10,7 @@
             gtag('js', new Date());
             gtag('config', 'G-53KD6RL4FE');
         </script>
+        @endproduction
 
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
