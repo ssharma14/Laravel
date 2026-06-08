@@ -60,12 +60,11 @@
                     <div class="skills-pills">
                         <span class="skill-item">PHP <span class="years">4.5+ yrs</span></span>
                         <span class="skill-item">Laravel <span class="years">3+ yrs</span></span>
-                        <span class="skill-item">C# / .NET <span class="years">1+ yrs</span></span>
-                        <span class="skill-item">Node.js <span class="years">2+ yrs</span></span>
-                        <span class="skill-item">Next.js <span class="years">1+ yrs</span></span>
+                        <span class="skill-item">C# / .NET <span class="years">2+ yrs</span></span>
+                        <span class="skill-item">Next.js <span class="years">2 yrs</span></span>
                         <span class="skill-item">WordPress <span class="years">4.5+ yrs</span></span>
                         <span class="skill-item">Drupal <span class="years">3+ yrs</span></span>
-                        <span class="skill-item">Payload CMS <span class="years">1+ yrs</span></span>
+                        <span class="skill-item">Payload CMS <span class="years">2 yrs</span></span>
                         <span class="skill-item">MySQL <span class="years">4.5+ yrs</span></span>
                     </div>
                 </div>
