@@ -60,8 +60,12 @@
                     <div class="skills-pills">
                         <span class="skill-item">PHP <span class="years">4.5+ yrs</span></span>
                         <span class="skill-item">Laravel <span class="years">3+ yrs</span></span>
+                        <span class="skill-item">C# / .NET <span class="years">1+ yrs</span></span>
+                        <span class="skill-item">Node.js <span class="years">2+ yrs</span></span>
+                        <span class="skill-item">Next.js <span class="years">1+ yrs</span></span>
                         <span class="skill-item">WordPress <span class="years">4.5+ yrs</span></span>
                         <span class="skill-item">Drupal <span class="years">3+ yrs</span></span>
+                        <span class="skill-item">Payload CMS <span class="years">1+ yrs</span></span>
                         <span class="skill-item">MySQL <span class="years">4.5+ yrs</span></span>
                     </div>
                 </div>
@@ -74,6 +78,9 @@
                         <span class="skill-item">Storybook <span class="years">2+ yrs</span></span>
                         <span class="skill-item">AWS <span class="years">2+ yrs</span></span>
                         <span class="skill-item">Webpack <span class="years">3+ yrs</span></span>
+                        <span class="skill-item">REST APIs <span class="years">5+ yrs</span></span>
+                        <span class="skill-item">Agile/Scrum <span class="years">3+ yrs</span></span>
+                        <span class="skill-item">Responsive Design <span class="years">6+ yrs</span></span>
                         <span class="skill-item">A11y <span class="years">2+ yrs</span></span>
                     </div>
                 </div>
