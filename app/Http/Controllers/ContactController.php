@@ -8,39 +8,23 @@ use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
-    /**
-     * Write code on Method
-     *
-     *
-     */
     public function create()
     {
-        // Generate timestamp token for time-based validation
         $formToken = encrypt(['timestamp' => now()->timestamp]);
+
         return view('contact', compact('formToken'));
     }
 
-    /**
-     * Write code on Method
-     *
-     *
-     */
-    public function store(ContactRequest $request) {
-        $validatedData = $request->validated();
+    public function store(ContactRequest $request)
+    {
+        Mail::to('sshrishti14@gmail.com')->send(new ContactMail($request->validated()));
 
-        Mail::to("sshrishti14@gmail.com")->send(new ContactMail($validatedData));
+        $message = 'Thank you! Your submission has been received!';
 
-        // Handle AJAX requests
         if ($request->wantsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Thank you! Your submission has been received!'
-            ]);
+            return response()->json(['success' => true, 'message' => $message]);
         }
 
-        // Handle regular form submissions (fallback)
-        return back()
-            ->with(['success' => 'Thank you! Your submission has been received!']);
+        return back()->with('success', $message);
     }
 }
-

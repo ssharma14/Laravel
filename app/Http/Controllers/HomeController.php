@@ -8,7 +8,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Generate timestamp token for contact form spam protection
         $formToken = encrypt(['timestamp' => now()->timestamp]);
 
         return view('home')->with([

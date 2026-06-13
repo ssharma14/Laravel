@@ -3,62 +3,37 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 
 class ContactRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'required|min:2|max:255|string|regex:/^[a-zA-Z\s]+$/',
             'email' => 'required|max:255|email:rfc,dns',
             'subject' => 'nullable|max:255|string|min:3',
             'message' => 'required|min:10|max:250|string',
-
-            // Honeypot field - should be empty
-            'website' => 'size:0',
-
-            // Time-based token validation
+            'website' => 'size:0',           // honeypot
             'form_token' => 'required',
         ];
     }
 
-    /**
-     * Configure the validator instance.
-     *
-     * @param  Validator  $validator
-     * @return void
-     */
-    public function withValidator($validator)
+    public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            // Time-based validation - form must be filled for at least 5 seconds
+            // Reject forms submitted too fast (bots) or on a stale/expired token.
             try {
                 $tokenData = decrypt($this->input('form_token'));
-                $timestamp = $tokenData['timestamp'] ?? 0;
-                $elapsed = now()->timestamp - $timestamp;
+                $elapsed = now()->timestamp - ($tokenData['timestamp'] ?? 0);
 
-                $minTime = config('contact.min_fill_time');
-                if ($elapsed < $minTime) {
+                if ($elapsed < config('contact.min_fill_time')) {
                     $validator->errors()->add('form_token', 'Please take your time to fill the form.');
                 }
-
-                // Token should not be older than 1 hour
                 if ($elapsed > 3600) {
                     $validator->errors()->add('form_token', 'Form has expired. Please refresh and try again.');
                 }
@@ -66,16 +41,11 @@ class ContactRequest extends FormRequest
                 $validator->errors()->add('form_token', 'Invalid form submission.');
             }
 
-            // Check for suspicious patterns in message
             $message = $this->input('message', '');
 
-            // Count URLs in message - reject if more than 2 links
-            $urlCount = preg_match_all('/https?:\/\//', $message);
-            if ($urlCount > 2) {
+            if (preg_match_all('/https?:\/\//', $message) > 2) {
                 $validator->errors()->add('message', 'Message contains too many links.');
             }
-
-            // Check for repeated characters (spam pattern)
             if (preg_match('/(.)\1{10,}/', $message)) {
                 $validator->errors()->add('message', 'Message contains invalid patterns.');
             }

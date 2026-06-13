@@ -3,13 +3,9 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 
-// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-// ==========================================
-// REVEAL ANIMATION (Strip reveal on page load)
-// ==========================================
-
+// Page-load reveal: vertical strips wipe away to show the page.
 class RevealAnimation {
     constructor() {
         this.stripsContainer = document.getElementById('preloader-strips');
@@ -17,22 +13,17 @@ class RevealAnimation {
         if (this.stripsContainer) {
             this.init();
         } else {
-            // No strips, just trigger hero animations immediately
             document.body.classList.remove('is-loading');
             window.dispatchEvent(new CustomEvent('preloaderComplete'));
         }
     }
 
     init() {
-        // Prevent scrolling during reveal
         document.body.style.overflow = 'hidden';
-
-        // Remove loading state to reveal content behind strips
         document.body.classList.remove('is-loading');
 
         const strips = this.stripsContainer.querySelectorAll('.preloader-strip');
 
-        // Animate each strip vertically from bottom to top with staggered delays
         strips.forEach((strip) => {
             const delay = parseFloat(strip.dataset.delay) || 0;
             gsap.to(strip, {
@@ -43,19 +34,13 @@ class RevealAnimation {
             });
         });
 
-        // Complete after all animations
         gsap.delayedCall(1.0, () => {
             this.stripsContainer.style.display = 'none';
             document.body.style.overflow = '';
-            // Trigger hero animations
             window.dispatchEvent(new CustomEvent('preloaderComplete'));
         });
     }
 }
-
-// ==========================================
-// CUSTOM CURSOR
-// ==========================================
 
 class CustomCursor {
     constructor() {
@@ -78,13 +63,11 @@ class CustomCursor {
     }
 
     init() {
-        // Track mouse movement
         document.addEventListener('mousemove', (e) => {
             this.mouseX = e.clientX;
             this.mouseY = e.clientY;
         });
 
-        // Hide cursor when leaving window
         document.addEventListener('mouseleave', () => {
             this.cursor.classList.add('cursor-hidden');
         });
@@ -93,19 +76,14 @@ class CustomCursor {
             this.cursor.classList.remove('cursor-hidden');
         });
 
-        // Animate cursor
         this.animate();
-
-        // Add hover effects
         this.addHoverEffects();
     }
 
     animate() {
-        // Smooth follow for dot
+        // The dot tracks tightly, the outline lags behind for a trailing feel.
         this.cursorX += (this.mouseX - this.cursorX) * 0.2;
         this.cursorY += (this.mouseY - this.cursorY) * 0.2;
-
-        // Smoother follow for outline
         this.outlineX += (this.mouseX - this.outlineX) * 0.1;
         this.outlineY += (this.mouseY - this.outlineY) * 0.1;
 
@@ -122,7 +100,6 @@ class CustomCursor {
     }
 
     addHoverEffects() {
-        // Regular hover elements
         const hoverElements = document.querySelectorAll('a, button, .btn, .nav-link, .social-link, .skill-item');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
@@ -133,7 +110,7 @@ class CustomCursor {
             });
         });
 
-        // Project cards - show "View" text
+        // Project cards swap the cursor for a "View" label.
         const projectCards = document.querySelectorAll('.project-card');
         projectCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
@@ -145,7 +122,6 @@ class CustomCursor {
             });
         });
 
-        // Input fields - hide cursor
         const inputs = document.querySelectorAll('input, textarea');
         inputs.forEach(input => {
             input.addEventListener('mouseenter', () => {
@@ -157,15 +133,10 @@ class CustomCursor {
         });
     }
 
-    // Refresh hover effects (call after dynamic content load)
     refresh() {
         this.addHoverEffects();
     }
 }
-
-// ==========================================
-// MAGNETIC BUTTONS
-// ==========================================
 
 class MagneticButtons {
     constructor() {
@@ -204,21 +175,18 @@ class MagneticButtons {
     }
 }
 
-// ==========================================
-// TEXT SPLIT ANIMATION
-// ==========================================
-
+// Splits text into spans so characters/words/lines can animate individually.
 class TextSplitter {
     static splitChars(element) {
         const text = element.textContent;
         element.innerHTML = '';
         element.setAttribute('aria-label', text);
 
-        text.split('').forEach((char, i) => {
+        text.split('').forEach((char) => {
             const span = document.createElement('span');
             span.className = 'char';
             span.style.display = 'inline-block';
-            span.textContent = char === ' ' ? '\u00A0' : char;
+            span.textContent = char === ' ' ? ' ' : char;
             element.appendChild(span);
         });
 
@@ -227,10 +195,11 @@ class TextSplitter {
 
     static splitWords(element) {
         const text = element.textContent;
+        const words = text.split(' ');
         element.innerHTML = '';
         element.setAttribute('aria-label', text);
 
-        text.split(' ').forEach((word, i) => {
+        words.forEach((word, i) => {
             const wordWrapper = document.createElement('span');
             wordWrapper.className = 'word';
             wordWrapper.style.display = 'inline-block';
@@ -244,8 +213,7 @@ class TextSplitter {
             wordWrapper.appendChild(wordInner);
             element.appendChild(wordWrapper);
 
-            // Add space between words
-            if (i < text.split(' ').length - 1) {
+            if (i < words.length - 1) {
                 const space = document.createElement('span');
                 space.innerHTML = '&nbsp;';
                 element.appendChild(space);
@@ -259,7 +227,7 @@ class TextSplitter {
         const lines = element.innerHTML.split('<br>');
         element.innerHTML = '';
 
-        lines.forEach((line, i) => {
+        lines.forEach((line) => {
             const lineWrapper = document.createElement('div');
             lineWrapper.className = 'line-reveal';
             lineWrapper.style.overflow = 'hidden';
@@ -276,16 +244,11 @@ class TextSplitter {
     }
 }
 
-// ==========================================
-// HERO ANIMATIONS
-// ==========================================
-
 class HeroAnimations {
     constructor() {
         this.hero = document.querySelector('.hero');
         if (!this.hero) return;
 
-        // Wait for reveal animation to complete
         window.addEventListener('preloaderComplete', () => this.init());
     }
 
@@ -299,7 +262,6 @@ class HeroAnimations {
 
         const tl = gsap.timeline({ delay: 0.1 });
 
-        // Animate header first
         if (header) {
             tl.to(header, {
                 opacity: 1,
@@ -308,28 +270,22 @@ class HeroAnimations {
             });
         }
 
-        // Animate name characters
         if (heroName) {
-            // Split each name part separately
             const firstName = heroName.querySelector('.hero-name-first');
             const lastName = heroName.querySelector('.hero-name-last');
 
             let allChars = [];
             if (firstName) {
-                const firstChars = TextSplitter.splitChars(firstName);
-                allChars = [...firstChars];
+                allChars = [...TextSplitter.splitChars(firstName)];
             }
             if (lastName) {
-                const lastChars = TextSplitter.splitChars(lastName);
-                allChars = [...allChars, ...lastChars];
+                allChars = [...allChars, ...TextSplitter.splitChars(lastName)];
             }
-
-            // Fallback if no spans found
             if (allChars.length === 0) {
                 allChars = TextSplitter.splitChars(heroName);
             }
 
-            // Make parent visible now that chars are split and hidden
+            // Reveal the name now that its characters are split and hidden.
             heroName.classList.add('ready');
             tl.to(allChars, {
                 opacity: 1,
@@ -340,7 +296,6 @@ class HeroAnimations {
             }, '-=0.3');
         }
 
-        // Animate roles
         if (heroRoles) {
             tl.to(heroRoles, {
                 opacity: 1,
@@ -349,11 +304,9 @@ class HeroAnimations {
                 ease: 'power3.out'
             }, '-=0.4');
 
-            // Start role cycling
             this.cycleRoles();
         }
 
-        // Animate tagline
         if (heroTagline) {
             tl.to(heroTagline, {
                 opacity: 1,
@@ -363,7 +316,6 @@ class HeroAnimations {
             }, '-=0.3');
         }
 
-        // Animate CTA buttons
         if (heroCta) {
             tl.to(heroCta, {
                 opacity: 1,
@@ -373,7 +325,6 @@ class HeroAnimations {
             }, '-=0.3');
         }
 
-        // Animate scroll indicator
         if (scrollIndicator) {
             tl.to(scrollIndicator, {
                 opacity: 1,
@@ -416,10 +367,6 @@ class HeroAnimations {
     }
 }
 
-// ==========================================
-// SCROLL ANIMATIONS
-// ==========================================
-
 class ScrollAnimations {
     constructor(lenis) {
         this.lenis = lenis;
@@ -445,9 +392,7 @@ class ScrollAnimations {
             });
         };
 
-        // Each nav link maps to the section(s) that should light it up. The
-        // skills section has no link of its own, so it keeps "About" active
-        // while it's on screen.
+        // Skills has no nav link of its own, so it keeps "About" active.
         const sections = [
             { id: 'about', selectors: ['#about', '.skills-marquee-section'] },
             { id: 'work', selectors: ['#work'] },
@@ -472,20 +417,13 @@ class ScrollAnimations {
     }
 
     setupSectionStacking() {
-        // Stacked-section overlay: each section is pinned once you've scrolled
-        // through it, while the next section slides up and covers it. Pinning at
-        // 'bottom bottom' (rather than CSS sticky) means content-heavy sections
-        // stay fully readable first, and tall sections like Work still work.
         if (window.innerWidth < 1024) return;
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-        // Stacking layers, bottom to top: Banner -> (About + Skills) -> Projects -> Contact.
-        // We pin the *last* section of each layer so the next layer slides up and
-        // covers it. About is deliberately NOT pinned, so the skills marquee rides
-        // along with About as one layer over the banner instead of covering About.
-        // Full-height sections pin at 'bottom bottom'. The skills marquee is
-        // shorter than the viewport, so it pins at 'center center' to sit truly
-        // centered on screen before Projects slides up over it.
+        // Pin the last section of each layer so the next one slides up and covers
+        // it. About stays unpinned so Skills rides over the banner with it.
+        // Full-height sections pin at 'bottom bottom'; the shorter skills marquee
+        // pins at 'center center' so it's centred before Projects covers it.
         const covered = [
             { selector: '.hero', start: 'bottom bottom' },
             { selector: '.skills-marquee-section', start: 'center center', requireFit: true },
@@ -495,10 +433,8 @@ class ScrollAnimations {
             const el = document.querySelector(selector);
             if (!el) return;
 
-            // On short screens a content section can be taller than the viewport.
-            // Pinning it there would let the next section cover its lower rows
-            // before they can be read, so skip the overlap and let it scroll
-            // normally (the full list stays visible before Projects arrives).
+            // If a section is taller than the viewport, don't pin it — the overlap
+            // would hide its lower rows before they can be read.
             if (requireFit && el.offsetHeight > window.innerHeight - 40) return;
 
             ScrollTrigger.create({
@@ -506,7 +442,7 @@ class ScrollAnimations {
                 start,
                 end: '+=' + window.innerHeight,
                 pin: true,
-                pinSpacing: false, // let the next section scroll up and overlap
+                pinSpacing: false,
                 anticipatePin: 1,
                 invalidateOnRefresh: true
             });
@@ -517,7 +453,6 @@ class ScrollAnimations {
         const aboutSection = document.querySelector('.about-section');
         if (!aboutSection) return;
 
-        // Image reveal
         const aboutImage = aboutSection.querySelector('.about-image');
         if (aboutImage) {
             gsap.from(aboutImage, {
@@ -533,7 +468,6 @@ class ScrollAnimations {
             });
         }
 
-        // Text reveal
         const paragraphs = aboutSection.querySelectorAll('.about-text p');
         paragraphs.forEach((p, i) => {
             gsap.to(p, {
@@ -550,7 +484,6 @@ class ScrollAnimations {
             });
         });
 
-        // Heading animation
         const heading = aboutSection.querySelector('.about-heading');
         if (heading) {
             gsap.from(heading, {
@@ -566,7 +499,6 @@ class ScrollAnimations {
             });
         }
 
-        // Badge animation
         const badge = aboutSection.querySelector('.freelance-badge');
         if (badge) {
             gsap.from(badge, {
@@ -587,7 +519,6 @@ class ScrollAnimations {
         const section = document.querySelector('.skills-marquee-section');
         if (!section) return;
 
-        // Respect reduced-motion: leave everything visible, skip the reveal.
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
         const header = section.querySelector('.skills-header');
@@ -619,7 +550,6 @@ class ScrollAnimations {
         const workSection = document.querySelector('.work-section');
         if (!workSection) return;
 
-        // Heading animation
         const workHeading = workSection.querySelector('.work-heading');
         if (workHeading) {
             gsap.from(workHeading, {
@@ -645,8 +575,7 @@ class ScrollAnimations {
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         cards.forEach((card, index) => {
-            // Each card rises and fades in, alternating its slide direction so the
-            // stacked list reveals with a gentle left/right zig-zag rhythm.
+            // Alternate the slide direction so cards zig-zag in from each side.
             gsap.from(card, {
                 scrollTrigger: {
                     trigger: card,
@@ -719,10 +648,6 @@ class ScrollAnimations {
     }
 }
 
-// ==========================================
-// HEADER SCROLL EFFECT
-// ==========================================
-
 class HeaderScroll {
     constructor(lenis) {
         this.header = document.querySelector('.site-header');
@@ -734,22 +659,11 @@ class HeaderScroll {
     }
 
     init() {
-        let lastScroll = 0;
-
         this.lenis.on('scroll', ({ scroll }) => {
-            if (scroll > 100) {
-                this.header.classList.add('scrolled');
-            } else {
-                this.header.classList.remove('scrolled');
-            }
-            lastScroll = scroll;
+            this.header.classList.toggle('scrolled', scroll > 100);
         });
     }
 }
-
-// ==========================================
-// MOBILE NAVIGATION
-// ==========================================
 
 class MobileNav {
     constructor() {
@@ -769,7 +683,6 @@ class MobileNav {
             this.closeBtn.addEventListener('click', () => this.toggle());
         }
 
-        // Close on link click
         const links = this.menu.querySelectorAll('a');
         links.forEach(link => {
             link.addEventListener('click', () => this.close());
@@ -786,10 +699,6 @@ class MobileNav {
         document.body.style.overflow = '';
     }
 }
-
-// ==========================================
-// SMOOTH SCROLL LINKS
-// ==========================================
 
 class SmoothScrollLinks {
     constructor(lenis) {
@@ -815,12 +724,7 @@ class SmoothScrollLinks {
     }
 }
 
-// ==========================================
-// INITIALIZE
-// ==========================================
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Lenis smooth scroll
     const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -831,16 +735,13 @@ document.addEventListener('DOMContentLoaded', () => {
         touchMultiplier: 2,
     });
 
-    // Connect Lenis to GSAP ScrollTrigger
+    // Drive Lenis from GSAP's ticker and keep ScrollTrigger in sync.
     lenis.on('scroll', ScrollTrigger.update);
-
     gsap.ticker.add((time) => {
         lenis.raf(time * 1000);
     });
-
     gsap.ticker.lagSmoothing(0);
 
-    // Initialize components
     new RevealAnimation();
     new CustomCursor();
     new MagneticButtons();
@@ -850,7 +751,6 @@ document.addEventListener('DOMContentLoaded', () => {
     new MobileNav();
     new SmoothScrollLinks(lenis);
 
-    // Refresh ScrollTrigger after fonts load
     document.fonts.ready.then(() => {
         ScrollTrigger.refresh();
     });
