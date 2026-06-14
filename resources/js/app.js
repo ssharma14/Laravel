@@ -5,7 +5,6 @@ import Lenis from 'lenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Page-load reveal: vertical strips wipe away to show the page.
 class RevealAnimation {
     constructor() {
         this.stripsContainer = document.getElementById('preloader-strips');
@@ -110,7 +109,6 @@ class CustomCursor {
             });
         });
 
-        // Project cards swap the cursor for a "View" label.
         const projectCards = document.querySelectorAll('.project-card');
         projectCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
